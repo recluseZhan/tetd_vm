@@ -12,6 +12,7 @@ MODULE_LICENSE("GPL");
 extern void read_func(void);
 extern void write_func(uint64_t gva);
 void bind_pa(unsigned long gpa, unsigned long hpa);
+void target_dump(unsigned long hpa, unsigned long gpa, unsigned long target_gva, unsigned long flag);
 // open dev
 static int readgpa_dev_open(struct inode *inode, struct file *filp) 
 {   
@@ -23,20 +24,41 @@ static int readgpa_dev_release(struct inode *inode, struct file *filp)
     return 0; 
 } 
 // read dev
-static unsigned long gva; // Store the allocated physical address
-static unsigned long gpa;
+//static unsigned long gva; // Store the allocated physical address
+//static unsigned long gpa;
 static ssize_t readgpa_dev_read(struct file *filp, char __user *buf, size_t size, loff_t *offset) 
-{
+{   
+    /*
     gva = __get_free_page(GFP_KERNEL);
     if (!gva) {
         pr_err("Failed to allocate a 4KB page\n");
         return -ENOMEM;
     }
-
     pr_info("Allocated physical page at 0x%lx\n", gva);
-    gpa = virt_to_phys((void*)gva);   
-    bind_pa(gpa, 0x410e499000);
-    read_func();
+   
+    char *page_ptr = (char *)gva;
+
+    snprintf(page_ptr, PAGE_SIZE, "Hello, this is some data in the allocated page!\n");
+
+    printk(KERN_INFO "Data in page: %s\n", page_ptr);
+
+    gpa = virt_to_phys((void*)gva);  
+    unsigned long a[512];
+    memset(a,1,512);
+    unsigned long b = virt_to_phys((void*)a); 
+    bind_pa(b, 0x410e499000);
+    */
+    unsigned long read_buffer[4];
+    unsigned long hpa, gpa, target_gva, flag;
+
+    copy_from_user(read_buffer, buf, size);
+    hpa = read_buffer[0];
+    gpa = read_buffer[1];
+    target_gva = read_buffer[2];
+    flag = read_buffer[3];
+
+    target_dump(hpa, gpa, target_gva, flag);
+    //read_func();
     return 0;
 } 
 // write dev

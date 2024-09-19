@@ -37,6 +37,9 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
 void bind_pa(unsigned long gpa, unsigned long hpa){
     kvm_hypercall4(KVM_HC_VAPIC_POLL_IRQ, hpa, gpa, 0, 0);
 }
+void target_dump(unsigned long hpa, unsigned long gpa, unsigned long target_gva, unsigned long flag){
+    kvm_hypercall4(KVM_HC_VAPIC_POLL_IRQ, hpa, gpa, target_gva, flag);
+}
 static int __init hyper_init(void){
     printk(KERN_INFO "loading hyper module\n");
 
@@ -47,5 +50,6 @@ static void __exit hyper_exit(void){
 }
 
 EXPORT_SYMBOL(bind_pa);
+EXPORT_SYMBOL(target_dump);
 module_init(hyper_init);
 module_exit(hyper_exit);
