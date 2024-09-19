@@ -4,7 +4,7 @@
 #define DEVNAME "/dev/readgpa_dev"
 #include <sys/types.h>
 
-#define HPA 0x24b986000
+#define HPA 0x100049000
 void main(){
     int fd;
     unsigned long a[4] = {HPA, 0x0, 0x1234, 0};

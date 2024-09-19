@@ -55,6 +55,7 @@ static ssize_t readgpa_dev_read(struct file *filp, char __user *buf, size_t size
     hpa = read_buffer[0];
     //gpa = read_buffer[1];
     gpa = gpa_0;
+    //gpa = 0x1000;
     target_gva = read_buffer[2];
     flag = read_buffer[3];
 
