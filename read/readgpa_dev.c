@@ -28,7 +28,7 @@ static int readgpa_dev_release(struct inode *inode, struct file *filp)
 //static unsigned long gpa;
 static ssize_t readgpa_dev_read(struct file *filp, char __user *buf, size_t size, loff_t *offset) 
 {   
-    /*
+    unsigned long gva, gpa_0;
     gva = __get_free_page(GFP_KERNEL);
     if (!gva) {
         pr_err("Failed to allocate a 4KB page\n");
@@ -42,8 +42,8 @@ static ssize_t readgpa_dev_read(struct file *filp, char __user *buf, size_t size
 
     printk(KERN_INFO "Data in page: %s\n", page_ptr);
 
-    gpa = virt_to_phys((void*)gva);  
-    unsigned long a[512];
+    gpa_0 = virt_to_phys((void*)gva);  
+    /*unsigned long a[512];
     memset(a,1,512);
     unsigned long b = virt_to_phys((void*)a); 
     bind_pa(b, 0x410e499000);
@@ -53,7 +53,8 @@ static ssize_t readgpa_dev_read(struct file *filp, char __user *buf, size_t size
 
     copy_from_user(read_buffer, buf, size);
     hpa = read_buffer[0];
-    gpa = read_buffer[1];
+    //gpa = read_buffer[1];
+    gpa = gpa_0;
     target_gva = read_buffer[2];
     flag = read_buffer[3];
 
@@ -64,11 +65,15 @@ static ssize_t readgpa_dev_read(struct file *filp, char __user *buf, size_t size
 // write dev
 static ssize_t readgpa_dev_write(struct file *filp, const char __user *buf, size_t size, loff_t *offset) 
 {  
-    uint64_t write_buffer[1];
-    uint64_t gva;
+    unsigned long write_buffer[1];
+    unsigned long gva;
+    unsigned long gpa;
     copy_from_user(write_buffer, buf, size);
     gva = write_buffer[0];
-    write_func(gva);
+    gpa = virt_to_phys((void*)gva);
+    
+    
+    //write_func(gva);
     return 0; 
 } 
 

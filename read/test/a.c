@@ -4,7 +4,7 @@
 #define DEVNAME "/dev/readgpa_dev"
 #include <sys/types.h>
 
-#define HPA 0x1a4ddb000
+#define HPA 0x410559e000
 void main(){
     int fd;
     unsigned long a[4] = {HPA, 0x0, 0x1234, 0};
@@ -14,12 +14,12 @@ void main(){
     //write(fd,&a[0],sizeof(a[0]));
     read(fd,a,sizeof(a));
     close(fd);
-    getchar();
+    //getchar();
 
-    fd = open(DEVNAME,O_RDWR);
-    printf("fd:%d\n",fd);
-    read(fd,b,sizeof(b));
-    close(fd); 
+    //fd = open(DEVNAME,O_RDWR);
+    //printf("fd:%d\n",fd);
+    //read(fd,b,sizeof(b));
+    //close(fd); 
      
     return 0;
 }
